@@ -1,0 +1,38 @@
+<template>
+  <div class="about">
+    <h1>About</h1>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum aperiam
+      officia possimus delectus inventore quod quisquam culpa voluptas iusto,
+      quae maiores quo dolorum, corporis laboriosam a dolore consequatur
+      assumenda nam!
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum aperiam
+      officia possimus delectus inventore quod quisquam culpa voluptas iusto,
+      quae maiores quo dolorum, corporis laboriosam a dolore consequatur
+      assumenda nam!
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum aperiam
+      officia possimus delectus inventore quod quisquam culpa voluptas iusto,
+      quae maiores quo dolorum, corporis laboriosam a dolore consequatur
+      assumenda nam!
+    </p>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  setup() {},
+});
+</script>
+
+<style>
+.about {
+  max-width: 600px;
+  margin: 20px auto;
+}
+</style>
