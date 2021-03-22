@@ -1,11 +1,9 @@
 <template>
   <div class="home">
-    <Toast v-if="showToast" />
-    <Todos @badValue="triggerToast" />
-    <transition name="fade">
-      <div v-if="showP">Hello, ninjas</div>
+    <transition name="toast">
+      <Toast v-if="showToast" />
     </transition>
-    <button @click="showP = !showP">toggle</button>
+    <Todos @badValue="triggerToast" />
   </div>
 </template>
 
@@ -18,35 +16,66 @@ export default defineComponent({
   components: { Toast, Todos },
   setup() {
     const showToast = ref<boolean>(false);
-    const showP = ref<boolean>(false);
 
     function triggerToast() {
       showToast.value = true;
       setTimeout(() => (showToast.value = false), 3000);
     }
 
-    return { showToast, showP, triggerToast };
+    return { showToast, triggerToast };
   },
 });
 </script>
 
 <style>
-.fade-enter-from {
+/* NOTE Can remove these as they're handled by wobble keyframe
+.toast-enter-from {
   opacity: 0;
+  transform: translateY(-60px);
 }
-.fade-enter-to {
+.toast-enter-to {
   opacity: 1;
+  transform: translateY(0);
+} */
+.toast-enter-active {
+  /* transition: all 0.3s ease; */
+  animation: wobble 0.5s ease;
 }
-.fade-enter-active {
-  transition: all 2s ease;
-}
-.fade-leave-from {
+.toast-leave-from {
   opacity: 1;
+  transform: translateY(0);
 }
-.fade-leave-to {
+.toast-leave-to {
   opacity: 0;
+  transform: translateY(-60px);
 }
-.fade-leave-active {
-  transition: all 2s ease;
+.toast-leave-active {
+  transition: all 0.3s ease;
+}
+
+@keyframes wobble {
+  0% {
+    transform: translateY(-60px);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  60% {
+    transform: translateX(8px);
+  }
+  70% {
+    transform: translateX(-8px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
+  90% {
+    transform: translateX(-4px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
 }
 </style>
