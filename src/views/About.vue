@@ -1,16 +1,14 @@
 <template>
   <div class="about">
+    <!-- NOTE If using JS-only then pass :css="false" for performance -->
     <transition
       appear
-      name="fade"
       @before-enter="beforeEnter"
       @enter="enter"
       @after-enter="afterEnter"
-      @before-leave="beforeLeave"
-      @leave="leave"
-      @after-leave="afterLeave"
+      :css="false"
     >
-      <h1 v-if="showTitle">About</h1>
+      <h1>About</h1>
     </transition>
     <p>
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum aperiam
@@ -34,53 +32,42 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
+import gsap from "gsap";
 
 export default defineComponent({
   name: "About",
   setup() {
-    const showTitle = ref<boolean>(true);
-
-    // Enter hooks
     function beforeEnter(el: HTMLTitleElement) {
-      console.log("beforeEnter", el);
+      console.log("beforeEnter - set initial state/styles of the element", el);
+      // Set initial state/styles of element
+      el.style.transform = "translateY(-60px)";
+      el.style.opacity = "0";
     }
-    function enter(el: HTMLTitleElement) {
-      console.log("enter", el);
+
+    // Use done function arg to tell Vue the transition is complete
+    function enter(el: HTMLTitleElement, done: () => void) {
+      console.log("enter - starting to enter, make transition", el);
+      // This is where we can use gsap built-in animations
+      gsap.to(el, {
+        duration: 2,
+        // transform: translateY(0)
+        y: 0,
+        opacity: 1,
+        ease: "bounce.out",
+        // Call done on the onComplete property to tell Vue
+        onComplete: done,
+      });
     }
+
     function afterEnter(el: HTMLTitleElement) {
-      console.log("afterEnter", el);
-      el.style.color = "green";
-
-      setTimeout(() => (showTitle.value = false), 2000);
-
-      // ERROR Don't put console.log() inside setTimeout! Breaks!
-      // setTimeout(() => {
-      //   console.log("afterEnter: waiting for 2 seconds...");
-      //   (showTitle.value = false), 2000;
-      // });
-    }
-
-    // Leave hooks
-    function beforeLeave(el: HTMLTitleElement) {
-      console.log("beforeLeave", el);
-      el.style.color = "pink";
-    }
-    function leave(el: HTMLTitleElement) {
-      console.log("leave", el);
-    }
-    function afterLeave(el: HTMLTitleElement) {
-      console.log("afterLeave", el);
+      console.log("afterEnter");
     }
 
     return {
-      showTitle,
       beforeEnter,
       enter,
       afterEnter,
-      beforeLeave,
-      leave,
-      afterLeave,
     };
   },
 });
@@ -90,18 +77,5 @@ export default defineComponent({
 .about {
   max-width: 600px;
   margin: 20px auto;
-}
-
-.fade-enter-from {
-  opacity: 0;
-}
-.fade-enter-active {
-  transition: opacity 3s ease;
-}
-.fade-leave-to {
-  opacity: 0;
-}
-.fade-leave-active {
-  transition: opacity 3s ease;
 }
 </style>
