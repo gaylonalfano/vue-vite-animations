@@ -1,17 +1,23 @@
 <template>
   <div class="contact">
     <h1>Contact</h1>
-    <ul>
-      <li v-for="icon in icons" :key="icon.name">
+    <transition-group
+      appear
+      tag="ul"
+      @before-enter="beforeEnter"
+      @enter="enter"
+    >
+      <li v-for="(icon, index) in icons" :key="icon.name" :data-index="index">
         <span class="material-icons">{{ icon.name }}</span>
         <div>{{ icon.text }}</div>
       </li>
-    </ul>
+    </transition-group>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
+import gsap from "gsap";
 
 interface Icon {
   name: string;
@@ -27,7 +33,39 @@ export default defineComponent({
       { name: "local_fire_department", text: "by smoke signal" },
     ]);
 
-    return { icons };
+    function beforeEnter(el: HTMLLIElement) {
+      console.log("beforeEnter - set initial state/style of element", el);
+      // Set initial styles to be down below the screen
+      el.style.opacity = "0";
+      el.style.transform = "translateY(100px)";
+    }
+
+    function enter(el: HTMLLIElement, done: () => void) {
+      console.log("enter - starting to enter, make transition", el);
+      // Using v-for index + :data-index + delay
+      gsap.to(el, {
+        duration: 0.8,
+        y: 0,
+        opacity: 1,
+        onComplete: done,
+        delay: el.dataset.index * 0.2,
+      });
+
+      // Using GSAP stagger - BROKEN
+      // gsap.to(el, {
+      //   duration: 2,
+      //   y: 0,
+      //   opacity: 1,
+      //   onComplete: done,
+      //   //delay: el.dataset.index * 0.2,
+      //   stagger: {
+      //     each: 0.4,
+      //     yoyo: true,
+      //   },
+      // });
+    }
+
+    return { icons, beforeEnter, enter };
   },
 });
 </script>
